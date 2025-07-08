@@ -272,8 +272,7 @@ export default function RecordPage() {
   }, []);
 
   return (
-    <div className='bg-gradient-to-b from-gray-50 to-white min-h-screen bg-white'>
-    <div className="flex-1 container mx-auto px-4 py-8 font-inter bg-gradient-to-b from-gray-50 to-white min-h-screen bg-white">
+    <div className="flex-1 container mx-auto px-4 py-8 font-inter bg-gradient-to-b from-gray-50 to-white min-h-screen">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -589,7 +588,6 @@ export default function RecordPage() {
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

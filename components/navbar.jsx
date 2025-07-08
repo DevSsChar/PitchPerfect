@@ -58,12 +58,6 @@ export default function Navbar() {
                         >
                             How It Works
                         </Link>
-                        <Link
-                            href="/features"
-                            className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter"
-                        >
-                            Features
-                        </Link>
                         <Link href={"/login"}>
                             <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 font-inter cursor-pointer">
                                 Try It Now
@@ -120,12 +114,6 @@ export default function Navbar() {
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 How It Works
-                            </Link>
-                            <Link
-                                href="/features"
-                                className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter"
-                            >
-                                Features
                             </Link>
                             <Link href={"/login"}>
                                 <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 font-inter">

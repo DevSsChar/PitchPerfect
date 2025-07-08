@@ -28,7 +28,7 @@ export default function Home() {
                   transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 
                   focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
                   bg-gradient-to-r from-[#e66e45] to-[#f4a261] text-white hover:shadow-lg hover:opacity-90 
-                  h-12 rounded-md px-8 transform hover:-translate-y-0.5 cursor-pointer">
+                  h-12 rounded-md px-8 transform hover:-translate-y-0.5">
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     width="24" 
@@ -46,12 +46,12 @@ export default function Home() {
                   Start Recording
                 </button>
                 </Link>
-                <Link href="/dashboard">
+                <Link href="/demo">
                   <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium 
                   transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 
                   focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
                   border bg-white h-12 rounded-md px-8 border-[#1e439c] text-[#1e439c] 
-                  hover:bg-[#1e439c] hover:text-white hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer">
+                  hover:bg-[#1e439c] hover:text-white hover:shadow-lg transform hover:-translate-y-0.5">
                   View Demo
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 

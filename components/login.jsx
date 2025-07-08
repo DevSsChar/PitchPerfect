@@ -1,27 +1,72 @@
 "use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import { signIn, getSession, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
+import { handleUserAuth } from '@/app/actions/auth';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState({
     github: false,
     google: false
   });
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const saveUser = async () => {
+      if (session?.user) {
+        console.log('Session user data:', session.user);
+        const result = await handleUserAuth({
+          id: session.user.id,
+          email: session.user.email,
+          name: session.user.name,
+          image: session.user.image,
+          provider: session.user.provider
+        });
+
+        if (result.success) {
+          toast.success('Login successful! User data stored in Supabase.', {
+            duration: 5000,
+            id: 'login-success'
+          });
+        } else {
+          console.error('Failed to store user data:', result.error);
+          toast.error('Failed to store user data');
+        }
+      }
+    };
+
+    saveUser();
+  }, [session]);
 
   const handleLogin = async (provider) => {
     try {
-      setIsLoading({ ...isLoading, [provider]: true });
-      // In a real app, you would redirect to your authentication endpoint
-      // For demo purposes we're just simulating the loading state
-      setTimeout(() => {
-        setIsLoading({ ...isLoading, [provider]: false });
-        alert(`Login with ${provider} would happen here`);
-      }, 1500);
+      setIsLoading(prev => ({ ...prev, [provider]: true }));
+      
+      console.log(`Attempting to sign in with ${provider}`);
+      
+      const result = await signIn(provider, {
+        redirect: true, // Let NextAuth handle the redirect
+        callbackUrl: '/record'
+      });
+
+      console.log('SignIn result:', result);
+
+      // If redirect is false and we get here, check for errors
+      if (result?.error) {
+        console.error('Authentication error:', result.error);
+        toast.error(`Authentication failed: ${result.error}`);
+        setIsLoading(prev => ({ ...prev, [provider]: false }));
+      }
+      // If redirect is true, this code won't execute as the page will redirect
+      
     } catch (error) {
       console.error(`Error during ${provider} login:`, error);
-      setIsLoading({ ...isLoading, [provider]: false });
+      toast.error(`Login failed: ${error.message}`);
+      setIsLoading(prev => ({ ...prev, [provider]: false }));
     }
   };
 
@@ -115,3 +160,4 @@ export default function LoginPage() {
     </div>
   );
 }
+
