@@ -1,13 +1,31 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const { data: session, status } = useSession();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+    const handleDropdown = () => {
+        setIsDropdownOpen((prev) => !prev);
+    };
+    const closeDropdown = () => {
+        setIsDropdownOpen(false);
+    };
+    // Close dropdown on outside click
+    React.useEffect(() => {
+        if (!isDropdownOpen) return;
+        function handleClick(e) {
+            if (!e.target.closest('.dropdown-parent')) setIsDropdownOpen(false);
+        }
+        document.addEventListener('mousedown', handleClick);
+        return () => document.removeEventListener('mousedown', handleClick);
+    }, [isDropdownOpen]);
 
     return (
         <nav className="bg-white shadow-lg sticky top-0 z-50 font-inter">
@@ -40,29 +58,32 @@ export default function Navbar() {
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
-                        <Link
-                            href="/record"
-                            className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter"
-                        >
-                            Record/Upload
-                        </Link>
-                        <Link
-                            href="/dashboard"
-                            className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter"
-                        >
-                            Demo
-                        </Link>
-                        <Link
-                            href="/how-it-works"
-                            className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter"
-                        >
-                            How It Works
-                        </Link>
-                        <Link href={"/login"}>
-                            <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 font-inter cursor-pointer">
-                                Try It Now
-                            </button>
-                        </Link>
+                        <Link href="/record" className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter">Record/Upload</Link>
+                        <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter">Demo</Link>
+                        <Link href="/how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter">How It Works</Link>
+                        {/* Auth logic */}
+                        {status === 'authenticated' ? (
+                            <div className="relative dropdown-parent">
+                                <button className="flex items-center space-x-2 focus:outline-none" onClick={handleDropdown}>
+                                    <img src={session.user?.image} alt="Profile" className="w-8 h-8 rounded-full border-2 border-gray-200" />
+                                    <span className="font-medium text-gray-800">{session.user?.name}</span>
+                                    <svg className="w-4 h-4 ml-1 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                                </button>
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50 cursor-pointer">
+                                        <Link href="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={closeDropdown}>Dashboard</Link>
+                                        <Link href="/history" className="block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={closeDropdown}>History</Link>
+                                        <button onClick={() => { signOut({ callbackUrl: '/' }); closeDropdown(); }} className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">Sign Out</button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link href={"/login"}>
+                                <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 font-inter cursor-pointer">
+                                    Try It Now
+                                </button>
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -94,32 +115,32 @@ export default function Navbar() {
                 {isMenuOpen && (
                     <div className="md:hidden py-4 border-t border-gray-200">
                         <div className="flex flex-col space-y-4">
-                            <Link
-                                href="/record"
-                                className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Record/Upload
-                            </Link>
-                            <Link
-                                href="/dashboard"
-                                className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Dashboard
-                            </Link>
-                            <Link
-                                href="/how-it-works"
-                                className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                How It Works
-                            </Link>
-                            <Link href={"/login"}>
-                                <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 font-inter">
-                                    Try It Now
-                                </button>
-                            </Link>
+                            <Link href="/record" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>Record/Upload</Link>
+                            <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                            <Link href="/how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>How It Works</Link>
+                            {/* Auth logic for mobile */}
+                            {status === 'authenticated' ? (
+                                <div className="relative dropdown-parent">
+                                    <button className="flex items-center space-x-2 focus:outline-none w-full justify-between px-2 py-2 border rounded-md bg-gray-50" onClick={handleDropdown}>
+                                        <span className="flex items-center">
+                                            <img src={session.user?.image} alt="Profile" className="w-7 h-7 rounded-full border-2 border-gray-200 mr-2" />
+                                            <span className="font-medium text-gray-800">{session.user?.name}</span>
+                                        </span>
+                                        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
+                                    {isDropdownOpen && (
+                                        <div className="absolute left-0 right-0 mt-2 w-full bg-white border rounded-md shadow-lg z-50 cursor-pointer">
+                                            <Link href="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => { closeDropdown(); setIsMenuOpen(false); }}>Dashboard</Link>
+                                            <Link href="/history" className="block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => { closeDropdown(); setIsMenuOpen(false); }}>History</Link>
+                                            <button onClick={() => { signOut({ callbackUrl: '/'}); closeDropdown(); setIsMenuOpen(false); }} className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">Sign Out</button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <Link href={"/login"}>
+                                    <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 font-inter cursor-pointer w-full">Try It Now</button>
+                                </Link>
+                            )}
                         </div>
                     </div>
                 )}
