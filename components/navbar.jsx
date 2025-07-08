@@ -61,6 +61,10 @@ export default function Navbar() {
                         <Link href="/record" className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter">Record/Upload</Link>
                         <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter">Demo</Link>
                         <Link href="/how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter">How It Works</Link>
+                        {/* Show Features link for unauthenticated users */}
+                        {status !== 'authenticated' && (
+                            <Link href="/features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium font-inter">Features</Link>
+                        )}
                         {/* Auth logic */}
                         {status === 'authenticated' ? (
                             <div className="relative dropdown-parent">
@@ -118,6 +122,10 @@ export default function Navbar() {
                             <Link href="/record" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>Record/Upload</Link>
                             <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                             <Link href="/how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>How It Works</Link>
+                            {/* Show Features link for unauthenticated users */}
+                            {status !== 'authenticated' && (
+                                <Link href="/features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>Features</Link>
+                            )}
                             {/* Auth logic for mobile */}
                             {status === 'authenticated' ? (
                                 <div className="relative dropdown-parent">

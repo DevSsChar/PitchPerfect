@@ -22,6 +22,7 @@ PitchPerfect is a modern web application that helps you become a more confident,
 - **Transcription**: Uses OpenAI Whisper for accurate speech-to-text
 - **NLP Analysis**: Detects filler words, analyzes pace, and scores vocal confidence
 - **JSON Output**: Returns structured, LLM-ready results for further processing
+- **ML Pipeline (Ongoing)**: The machine learning pipeline is currently under development. The files in the `backend/` directory (such as `acoustic_features.py`, `llm_feedback.py`, `text_analysis.py`, and `transcription.py`) serve as references and prototypes for the evolving ML features.
 
 ### 4. **Demo Dashboard**
 - **Sample Analysis**: Visualizes what users receive after analysis
@@ -60,6 +61,7 @@ pitchperfect/
 │   └── features/         # Features content
 │   └── how-it-works/     # How it works content
 │   └── ...
+├── backend/              # Python backend (ML pipeline in progress; files are reference/prototype)
 ├── public/               # Static assets
 ├── styles/               # Global and module CSS
 └── README.md             # This documentation
@@ -85,6 +87,7 @@ See [`how-it-works.md`](components/how-it-works/how-it-works.md) for a detailed 
 - **Personalized Coaching**: Actionable before/after cards
 - **Transcript Highlights**: Key phrases and fillers marked for review
 - **Privacy-First**: No account required, secure processing
+- **ML Pipeline (Ongoing)**: Advanced ML features are being actively developed. See the `backend/` directory for reference scripts and prototypes.
 
 See [`features.md`](components/features/features.md) for a full list.
 
@@ -142,6 +145,7 @@ See [`login.md`](components/login.md) for more info.
 - Connect dashboard to live backend analysis
 - Add user accounts and history
 - Expand coaching and export features
+- **Continue ML Pipeline Development**: Expand and integrate the machine learning backend for deeper analysis and smarter feedback.
 
 ---
 
