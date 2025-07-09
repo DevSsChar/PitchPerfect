@@ -1,90 +1,81 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/config';
-import { supabaseAdmin } from '../../../lib/supabase-server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]/route';
+import { createClient } from '@supabase/supabase-js';
 
-/**
- * API route to fetch user's speech analysis history
- * Retrieves all analysis records for the authenticated user from Supabase
- */
-export async function GET() {
+// Initialize Supabase client
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+export async function GET(request) {
   try {
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.user.id;
-
-    // Fetch history from Supabase
+    // Fetch speech analysis results from Supabase
     const { data, error } = await supabaseAdmin
       .from('speech_analysis_results')
       .select('*')
-      .eq('user_id', userId)
+      .eq('user_id', session.user.id)
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching history from Supabase:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch history data' },
-        { status: 500 }
-      );
+      console.error('Error fetching history:', error);
+      return NextResponse.json({ error: 'Failed to fetch history' }, { status: 500 });
     }
 
-    // Process the data to extract relevant information
-    const processedHistory = data.map(item => {
-      // Extract key metrics from the analysis results
-      let overall_score = 'N/A';
-      let word_count = 'N/A';
-      let summary = 'No summary available';
+    // Process the data to extract metrics
+    const processedData = data.map(item => {
+      // Extract metrics from the results
+      const results = item.results || {};
       
-      try {
-        // Ensure results is treated as a JSON object
-        const results = item.results;
-          
-        if (results) {
-          // Extract overall score from LLM feedback if available
-          if (results.llm_feedback && results.llm_feedback.overall_score) {
-            overall_score = results.llm_feedback.overall_score;
-          }
-          
-          // Extract word count from text analysis if available
-          if (results.text_analysis && results.text_analysis.word_count) {
-            word_count = results.text_analysis.word_count;
-          }
-          
-          // Extract summary from LLM feedback if available
-          if (results.llm_feedback && results.llm_feedback.summary_feedback) {
-            summary = results.llm_feedback.summary_feedback;
-          }
-        }
-      } catch (e) {
-        console.error('Error processing results JSON:', e);
+      // Extract overall score
+      let overallScore = 0;
+      if (results.overall_score) {
+        overallScore = results.overall_score;
+      } else if (results.metrics && results.metrics.overall) {
+        overallScore = results.metrics.overall.score;
+      }
+      
+      // Extract word count
+      let wordCount = 0;
+      if (results.word_count) {
+        wordCount = results.word_count;
+      } else if (results.metrics && results.metrics.words) {
+        wordCount = results.metrics.words.count;
+      }
+      
+      // Extract summary
+      let summary = '';
+      if (results.summary) {
+        summary = results.summary;
+      } else if (results.llm_feedback) {
+        summary = results.llm_feedback;
+      } else if (results.text_analysis && results.text_analysis.summary) {
+        summary = results.text_analysis.summary;
       }
       
       return {
         id: item.id,
-        user_id: item.user_id,
-        file_name: item.file_name || 'Untitled Speech',
-        audio_duration: item.audio_duration,
+        file_name: item.file_name,
         created_at: item.created_at,
-        overall_score,
-        word_count,
-        summary
+        audio_duration: item.audio_duration,
+        overall_score: overallScore,
+        word_count: wordCount,
+        summary: summary,
+        analysis_type: item.analysis_type || 'server'
       };
     });
 
-    return NextResponse.json({ history: processedHistory });
+    return NextResponse.json(processedData);
   } catch (error) {
-    console.error('Error in history API route:', error);
-    return NextResponse.json(
-      { error: 'Failed to process history request', details: error.message },
-      { status: 500 }
-    );
+    console.error('Unexpected error:', error);
+    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
   }
 }
 

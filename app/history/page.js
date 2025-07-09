@@ -1,10 +1,13 @@
-import HistoryComponent from '../../components/history/history';
+"use client";
+import React from "react";
+import History from "@/components/history/history";
 
-export const metadata = {
-  title: 'Speech History | PitchPerfect',
-  description: 'View your speech analysis history and track your progress over time.',
+const Page = () => {
+  return (
+    <div>
+      <History />
+    </div>
+  );
 };
 
-export default function HistoryPage() {
-  return <HistoryComponent />;
-}
+export default Page;
