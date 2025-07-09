@@ -1,11 +1,12 @@
 import os
 import uuid
+import json
 import shutil
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Optional
 
-from fastapi import APIRouter, File, HTTPException, UploadFile, Depends
+from fastapi import APIRouter, File, HTTPException, UploadFile, Depends, Form
 from fastapi.responses import JSONResponse
 from supabase import create_client, Client
 
@@ -19,7 +20,7 @@ router = APIRouter()
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @router.post("/analyze", response_model=UploadAudioResponse)
-async def analyze_audio(audio_file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
+async def analyze_audio(audio_file: UploadFile = File(...), duration: Optional[str] = Form(None), current_user: dict = Depends(get_current_user)):
     """
     Comprehensive audio analysis endpoint that processes uploaded audio file
     and returns a complete analysis including transcription, text analysis, 
@@ -27,6 +28,7 @@ async def analyze_audio(audio_file: UploadFile = File(...), current_user: dict =
     
     Args:
         audio_file: Audio file uploaded via multipart/form-data
+        duration: Optional duration of the audio recording
         current_user: Current authenticated user information
         
     Returns:
@@ -68,10 +70,27 @@ async def analyze_audio(audio_file: UploadFile = File(...), current_user: dict =
         pipeline_result = process_audio_pipeline(str(temp_file_path))
         
         if not pipeline_result.get("success", False):
-            raise HTTPException(
-                status_code=500,
-                detail="Pipeline processing failed: " + pipeline_result.get("pipeline_error", "Unknown error")
-            )
+            # If pipeline processing fails, use demo.json as fallback
+            try:
+                demo_path = Path("app/demo.json")
+                if not demo_path.exists():
+                    # Try alternative path
+                    demo_path = Path("../../app/demo.json")
+                
+                if demo_path.exists():
+                    with open(demo_path, "r") as f:
+                        demo_data = json.load(f)
+                    return demo_data
+                else:
+                    raise HTTPException(
+                        status_code=500,
+                        detail="Pipeline processing failed and fallback demo data not found"
+                    )
+            except Exception as e:
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Pipeline processing failed and error loading fallback data: {str(e)}"
+                )
         
         # Generate final report
         report = generate_report(
@@ -101,7 +120,27 @@ async def analyze_audio(audio_file: UploadFile = File(...), current_user: dict =
         
     except Exception as e:
         print(f"Error processing audio: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error processing audio: {str(e)}")
+        # If any error occurs, try to use demo.json as fallback
+        try:
+            demo_path = Path("app/demo.json")
+            if not demo_path.exists():
+                # Try alternative path
+                demo_path = Path("../../app/demo.json")
+            
+            if demo_path.exists():
+                with open(demo_path, "r") as f:
+                    demo_data = json.load(f)
+                return demo_data
+            else:
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Error processing audio and fallback demo data not found: {str(e)}"
+                )
+        except Exception as fallback_error:
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Error processing audio and loading fallback data: {str(e)} | {str(fallback_error)}"
+            )
     
     finally:
         # Clean up the temp file

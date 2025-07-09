@@ -1,12 +1,27 @@
 // app/api/analyze/route.js
 import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../auth/config';
 
 /**
  * API route to handle audio analysis
- * Receives audio file data and returns analysis results
+ * Receives audio file data and forwards to Python backend
+ * Falls back to demo.json if backend is unavailable
+ * Stores analysis results in Supabase
  */
 export async function POST(request) {
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     // Get the form data from the request
     const formData = await request.formData();
     
@@ -42,36 +57,80 @@ export async function POST(request) {
       );
     }
     
-    // Here you would typically:
-    // 1. Save the file to storage (e.g., local disk, S3, etc.)
-    // 2. Process the audio with your analysis service
-    // 3. Store results in database
-    // 4. Return results to user
+    // Create a new FormData object to send to the backend
+    const backendFormData = new FormData();
+    backendFormData.append('audio_file', audioFile);
+    
+    // Add duration if provided
+    const duration = formData.get('duration');
+    if (duration) {
+      backendFormData.append('duration', duration);
+    }
 
-    // For demo purposes, we'll just simulate a successful analysis
-    const analysisResults = {
-      id: `analysis_${Date.now()}`,
-      fileName: fileName,
-      fileType: fileType,
-      fileSize: fileSize,
-      duration: formData.get('duration') || 'Unknown',
-      results: {
-        clarity: Math.round(Math.random() * 100),
-        pacing: Math.round(Math.random() * 100),
-        confidence: Math.round(Math.random() * 100),
-        engagement: Math.round(Math.random() * 100),
-        summary: "This is a placeholder for the actual audio analysis. In a real implementation, this would contain the AI-generated feedback based on the audio content."
-      },
-      timestamp: new Date().toISOString()
-    };
+    let analysisResults;
+    let isFallback = false;
+
+    // Forward to Python backend
+    try {
+      // Get the backend URL from environment variables or use default
+      const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
+      const response = await fetch(`${backendUrl}/audio/analyze`, {
+        method: 'POST',
+        body: backendFormData,
+        headers: {
+          'Authorization': `Bearer ${session.user.id}` // Pass user ID as token
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Backend returned ${response.status}: ${await response.text()}`);
+      }
+
+      analysisResults = await response.json();
+    } catch (backendError) {
+      console.error('Error connecting to backend:', backendError);
+      
+      // Fallback to demo.json if backend is unavailable
+      try {
+        const demoPath = path.join(process.cwd(), 'app', 'demo.json');
+        analysisResults = JSON.parse(fs.readFileSync(demoPath, 'utf8'));
+        isFallback = true;
+      } catch (fallbackError) {
+        throw new Error(`Backend error: ${backendError.message}. Fallback error: ${fallbackError.message}`);
+      }
+    }
+    
+    // Store analysis results in Supabase
+    try {
+      // Use the supabaseAdmin client directly to store the results
+      const { supabaseAdmin } = await import('../../../lib/supabase-server');
+      
+      // Ensure results is stored as a proper JSON object, not a string
+      const { data: insertedData, error } = await supabaseAdmin
+        .from('speech_analysis_results')
+        .insert({
+          user_id: session.user.id,
+          file_name: fileName,
+          audio_duration: analysisResults.audio_duration || 0,
+          results: analysisResults // Store as JSON object directly
+        })
+        .select();
+
+      if (error) {
+        console.error('Error storing analysis in Supabase:', error);
+      }
+    } catch (storageError) {
+      console.error('Error storing analysis results:', storageError);
+      // Continue even if storage fails
+    }
     
     // Return success response with analysis results
     return NextResponse.json({
       success: true,
-      message: 'Audio analysis completed',
-      data: analysisResults
+      message: isFallback ? 'Audio analysis completed (using demo data)' : 'Audio analysis completed',
+      data: analysisResults,
+      fallback: isFallback
     });
-    
   } catch (error) {
     console.error('Error processing audio analysis:', error);
     

@@ -59,7 +59,10 @@ export default function Navbar() {
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
                         <Link href="/record" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium font-inter">Record/Upload</Link>
-                        <Link href="/dashboard" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium font-inter">Demo</Link>
+                        <Link href="/dashboard" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium font-inter">Dashboard</Link>
+                        {status === 'authenticated' && (
+                            <Link href="/history" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium font-inter">History</Link>
+                        )}
                         <Link href="/how-it-works" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium font-inter">How It Works</Link>
                         {/* Show Features link for unauthenticated users */}
                         {status !== 'authenticated' && (
@@ -121,6 +124,9 @@ export default function Navbar() {
                         <div className="flex flex-col space-y-4">
                             <Link href="/record" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>Record/Upload</Link>
                             <Link href="/dashboard" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                            {status === 'authenticated' && (
+                                <Link href="/history" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>History</Link>
+                            )}
                             <Link href="/how-it-works" className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors font-medium py-2 font-inter" onClick={() => setIsMenuOpen(false)}>How It Works</Link>
                             {/* Show Features link for unauthenticated users */}
                             {status !== 'authenticated' && (

@@ -23,6 +23,9 @@
   --success-dark: #065f46;
   --warning: #f59e0b;
   --error: #ef4444;
+  --error-light: #fee2e2;
+  --error-lighter: #fecaca;
+  --error-medium: #fca5a5;
   --shadow: rgba(0, 0, 0, 0.1);
   --shadow-light: rgba(0, 0, 0, 0.05);
 }
@@ -50,6 +53,9 @@
   --success-dark: #a7f3d0;
   --warning: #fbbf24;
   --error: #f87171;
+  --error-light: #7f1d1d;
+  --error-lighter: #991b1b;
+  --error-medium: #b91c1c;
   --shadow: rgba(0, 0, 0, 0.25);
   --shadow-light: rgba(0, 0, 0, 0.15);
 }

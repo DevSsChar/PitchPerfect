@@ -238,8 +238,8 @@ export default function RecordPage() {
       // Handle successful analysis
       console.log('Analysis result:', result);
       
-      // In a real app, you would navigate to a results page or display the results
-      alert('Analysis complete! Check the console for results (in a real app, you would see the actual analysis)');
+      // Redirect to the dashboard to show analysis results
+      window.location.href = '/dashboard';
       
     } catch (error) {
       console.error('Error analyzing audio:', error);
