@@ -4,6 +4,8 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import NextAuthSessionProvider from "@/components/SessionProvider";
 import { Toaster } from "react-hot-toast";
+import ThemeToggle from "@/components/ThemeToggle";
+import { ThemeProvider } from "@/components/ThemeContext";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,12 +27,15 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextAuthSessionProvider>
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster position="top-center" />
-        </NextAuthSessionProvider>
+        <ThemeProvider>
+          <NextAuthSessionProvider>
+            <ThemeToggle />
+            <Navbar />
+            {children}
+            <Footer />
+            <Toaster position="top-center" />
+          </NextAuthSessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

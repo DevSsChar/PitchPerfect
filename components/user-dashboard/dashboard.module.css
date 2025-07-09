@@ -2,7 +2,7 @@
 .scrollContainer {
   overflow-x: auto;
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f1f5f9;
+  scrollbar-color: var(--border) var(--muted);
   margin-bottom: 1rem;
 }
 
@@ -11,22 +11,22 @@
 }
 
 .scrollContainer::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--muted);
   border-radius: 10px;
 }
 
 .scrollContainer::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
+  background-color: var(--border);
   border-radius: 10px;
 }
 
-/* Ensure white background throughout */
+/* Ensure proper background throughout */
 .dashboardContainer {
-  background-color: white !important;
+  background-color: var(--background) !important;
 }
 
 body {
-  background-color: white !important;
+  background-color: var(--background) !important;
 }
 
 /* Chart and graph responsive styling */

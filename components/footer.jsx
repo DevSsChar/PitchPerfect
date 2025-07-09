@@ -4,15 +4,15 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200 mt-auto">
+    <footer className="bg-[var(--background)] border-t border-[var(--border)] mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="col-span-2">
-            <h3 className="text-lg font-bold text-blue-600 mb-4">
+            <h3 className="text-lg font-bold text-[var(--primary)] mb-4">
               PitchPerfect
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-[var(--foreground)] opacity-80 mb-4">
               AI-powered presentation coaching to help you speak with confidence and clarity.
             </p>
             
@@ -20,7 +20,7 @@ export default function Footer() {
             <div className="flex space-x-4">
               <Link 
                 href="#" 
-                className="text-gray-500 hover:text-blue-600 transition-colors"
+                className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--primary)] transition-colors"
                 aria-label="Twitter"
               >
                 <svg 
@@ -39,7 +39,7 @@ export default function Footer() {
               </Link>
               <Link 
                 href="#" 
-                className="text-gray-500 hover:text-blue-600 transition-colors"
+                className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--primary)] transition-colors"
                 aria-label="LinkedIn"
               >
                 <svg 
@@ -60,7 +60,7 @@ export default function Footer() {
               </Link>
               <Link 
                 href="#" 
-                className="text-gray-500 hover:text-blue-600 transition-colors"
+                className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--primary)] transition-colors"
                 aria-label="GitHub"
               >
                 <svg 
@@ -83,12 +83,12 @@ export default function Footer() {
 
           {/* Navigation Section */}
           <div>
-            <h4 className="font-semibold text-gray-800 mb-3">Navigation</h4>
+            <h4 className="font-semibold text-[var(--foreground)] mb-3">Navigation</h4>
             <ul className="space-y-2">
               <li>
                 <Link 
                   href="/record" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                  className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors"
                 >
                   Record/Upload
                 </Link>
@@ -96,7 +96,7 @@ export default function Footer() {
               <li>
                 <Link 
                   href="/dashboard" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                  className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors"
                 >
                   Dashboard
                 </Link>
@@ -104,7 +104,7 @@ export default function Footer() {
               <li>
                 <Link 
                   href="/how-it-works" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                  className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors"
                 >
                   How It Works
                 </Link>
@@ -114,12 +114,12 @@ export default function Footer() {
 
           {/* Legal Section */}
           <div>
-            <h4 className="font-semibold text-gray-800 mb-3">Legal</h4>
+            <h4 className="font-semibold text-[var(--foreground)] mb-3">Legal</h4>
             <ul className="space-y-2">
               <li>
                 <Link 
                   href="/privacy-policy" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                  className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -127,7 +127,7 @@ export default function Footer() {
               <li>
                 <Link 
                   href="/terms-of-service" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                  className="text-[var(--foreground)] opacity-80 hover:opacity-100 hover:text-[var(--primary)] transition-colors"
                 >
                   Terms of Service
                 </Link>
@@ -137,8 +137,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-200 mt-8 pt-6 text-center">
-          <p className="text-gray-500 text-sm">
+        <div className="border-t border-[var(--border)] mt-8 pt-6 text-center">
+          <p className="text-[var(--foreground)] opacity-60 text-sm">
             © 2024 PitchPerfect. All rights reserved.
           </p>
         </div>
