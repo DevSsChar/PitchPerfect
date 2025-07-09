@@ -1,9 +1,9 @@
-/* Custom scrollbar for overflowing elements on mobile */
 .scrollContainer {
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border) var(--muted);
-  margin-bottom: 1rem;
+  position: relative;
+  padding: 1rem;
 }
 
 .scrollContainer::-webkit-scrollbar {
@@ -12,26 +12,73 @@
 
 .scrollContainer::-webkit-scrollbar-track {
   background: var(--muted);
-  border-radius: 10px;
+  border-radius: 3px;
 }
 
 .scrollContainer::-webkit-scrollbar-thumb {
   background-color: var(--border);
-  border-radius: 10px;
+  border-radius: 3px;
+  border: 1px solid var(--muted);
 }
 
-/* Ensure proper background throughout */
 .dashboardContainer {
   background-color: var(--background) !important;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
-body {
-  background-color: var(--background) !important;
+.dashboardContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to bottom right, var(--accent-transparent), var(--primary-transparent));
+  opacity: 0.1;
+  z-index: -1;
+  border-radius: 0 0 30px 30px;
 }
 
-/* Chart and graph responsive styling */
+/* Chart and graph styling */
+.chartContainer {
+  position: relative;
+  background: var(--background);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px var(--shadow-light),
+              0 2px 4px -1px var(--shadow);
+  border: 1px solid var(--border);
+  overflow: visible;
+  margin-bottom: 2rem;
+}
+
+/* Responsive styling */
 @media (max-width: 640px) {
   .scrollContainer > div {
     min-width: 600px;
   }
+  
+  .dashboardContainer::before {
+    height: 150px;
+  }
+}
+
+/* Animation for chart elements */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chartContainer > * {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Hover effects for interactive elements */
+.chartContainer:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease-out;
+  box-shadow: 0 6px 8px -2px var(--shadow-light),
+              0 4px 6px -1px var(--shadow);
 }

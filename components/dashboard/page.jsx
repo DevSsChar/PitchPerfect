@@ -91,8 +91,8 @@ export default function Dashboard() {
             <div className="absolute left-0 top-0 bottom-0 w-12 flex flex-col justify-between text-[var(--foreground)] opacity-70 text-sm">
               <span>200</span>
               <span>175</span>
-              <span className="text-teal-500">Ideal Max</span>
-              <span className="text-teal-500">Ideal Min</span>
+              <span className="text-[var(--success)]">Ideal Max</span>
+              <span className="text-[var(--success)]">Ideal Min</span>
               <span>100</span>
             </div>
             
