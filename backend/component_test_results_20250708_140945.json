@@ -1,0 +1,8 @@
+{
+  "FFmpeg": true,
+  "Transcription": true,
+  "Text Analysis": true,
+  "Acoustic Features": true,
+  "LLM Feedback": true,
+  "API Endpoint": false
+}

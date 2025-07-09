@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-07-08T17:17:35.808979",
+  "results": {
+    "transcription": {
+      "Basic Audio Loading": true,
+      "Duration Detection": true,
+      "Text Transcription": true,
+      "Error Handling": true
+    },
+    "text_analysis": {
+      "Basic Text Processing": true,
+      "Filler Word Detection": false,
+      "Readability Scores": true,
+      "Speech Rate Analysis": true
+    },
+    "acoustic": {
+      "Basic Audio Processing": true,
+      "Pitch Analysis": true,
+      "Energy Analysis": true,
+      "Voice Quality Metrics": true
+    }
+  }
+}

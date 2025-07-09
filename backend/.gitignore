@@ -1,0 +1,70 @@
+# Byte-compiled / cache / virtual envs
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Environment variables
+.env
+
+# Large audio, model, and temp files
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+*.zip
+*.tar.gz
+*.tar
+*.h5
+*.pt
+*.ckpt
+*.onnx
+*.pb
+*.npz
+*.npy
+*.pkl
+*.joblib
+*.csv
+*.jsonl
+*.log
+*.tmp
+*.cache
+*.dat
+*.sqlite3
+*.db
+*.bak
+
+# OpenSMILE binaries and configs (if not needed in repo)
+SMILExtract.exe
+*.conf
+
+# Test outputs and reports
+*.html
+*.pdf
+*.xlsx
+*.xls
+*.docx
+*.pptx
+*.ppt
+
+# VSCode and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# PitchPerfect specific
+PitchPerfect/backend/tests/data/
+PitchPerfect/static/temp/
+PitchPerfect/component_test_results_*.json
+PitchPerfect/milestone_report.json
